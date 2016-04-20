@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<!-- 	<constant name="struts.multipart.maxSize" value=""></constant> -->
+	<!-- namespace:
+	            路径 
+	     /    == http://localhost:8080/web应用/   根目录
+	     /abc == http://localhost:8080/web应用/abc/  
+	     绝对路径:  操作系统  c:\windows\syste.dat   url:http://localhost:8080/web应用/index.jsp
+	     相对路径：   当前      2.jpg
+	                          下一级  image/1.jpg
+	                         上一级   ../3.jpg
+	      根路径        /     web服务器         http://localhost:8080/      客户端
+	          /     项目                    http://localhost:8080/web应用/    web.xml  struts.xml  Context
+	      -->
+	<package name="mypackage" extends="struts-default" namespace="/" > 
+		<interceptors>
+			<interceptor name="LoginInterceptor" class="com.af1509.interceptor.LoginCheckInterceptor"></interceptor>
+			<interceptor-stack name="mydefaultStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="LoginInterceptor"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<!-- <default-interceptor-ref name="mydefaultStack"/> -->
+		
+		
+			
+		<global-results>
+			<result name="login">/WEB-INF/login.jsp</result>
+		</global-results>
+		
+
+	
+		<action name="StaffAction" class="com.af1509.action.StaffAction">
+<!-- 		<interceptor-ref name="defaultStack"></interceptor-ref>
+			<interceptor-ref name="LoginInterceptor"></interceptor-ref> -->
+			<result name="success">/WEB-INF/StaffShow.jsp</result>
+			<result name="find">/WEB-INF/StaffUpdate.jsp</result>
+			<result name="add">/WEB-INF/StaffAdd.jsp</result>
+		</action>	
+		<action name="LoginAction" class="com.af1509.action.LoginAction">
+			<!-- <result name="success">/WEB-INF/StaffShow.jsp</result> -->
+			<result type="redirectAction" name="success">
+				<param name="namespace">/</param>
+				<param name="actionName">StaffAction</param>
+				<param name="method">findAll</param>
+			</result>
+			<result name="input">/index.jsp</result>
+		</action>
+		<action name="CheckCodeAction" class="com.af1509.action.CheckCodeAction">
+			<result type="stream" name="success">checkIS</result>
+		</action>	
+		<action name="Index" class="com.af1509.action.IndexAction">
+			<result name="success">/WEB-INF/login.jsp</result>
+			
+		</action>
+		
+		<action name="uploadAction" class="com.af1509.action.UpLoadAction">
+			<result name="input">/WEB-INF/upload.jsp</result>
+			<result name="success">/WEB-INF/upload.jsp</result>
+		</action>
+
+	</package>
+	
+	<package name="jsonPackage" extends="json-default" namespace="/">
+		<action name="StaffAjax" class="com.af1509.action.StaffAction">
+			<result type="json" name="exist">
+				<param name="root">staff</param>
+			</result>
+		</action>	
+	</package>
+</struts>    
